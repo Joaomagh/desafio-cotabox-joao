@@ -1,7 +1,6 @@
 <template>
   <div>
     <Pie :data="chartData" :options="chartOptions" />
-    <!-- NOVO: Exibir a soma total das participações -->
     <p v-if="totalParticipation > 100" class="warning-message">
       Atenção: A soma das participações ultrapassa 100%! Total atual: {{ totalParticipation }}%.
     </p>
@@ -35,7 +34,7 @@ export default {
       type: Array,
       required: true,
     },
-    totalParticipation: { // <-- NOVO PROP: Recebe a soma total do pai
+    totalParticipation: { 
       type: Number,
       required: true,
       default: 0,
@@ -55,7 +54,7 @@ export default {
               '#4BC0C0',
               '#9966FF',
               '#FF9F40',
-              '#8A2BE2', // Mais cores para mais participantes
+              '#8A2BE2', 
               '#7FFF00',
               '#DC143C',
               '#00FFFF',

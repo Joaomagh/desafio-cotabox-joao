@@ -1,14 +1,15 @@
-// backend/src/routes/participantRoutes.js
-const express = require('express'); // Importa o Express
-// Importa as funções do controlador de participantes
-const { getAllParticipants, createParticipant } = require('../controllers/participantController');
+const express = require('express');
 
-const router = express.Router(); // Cria um novo roteador do Express
+const { getAllParticipants, createParticipant, deleteParticipant } = require('../controllers/participantController');
 
-// Define a rota GET para '/' (que será '/api/participants' no app.js)
+const router = express.Router();
+
 router.get('/', getAllParticipants);
 
-// Define a rota POST para '/'
+
 router.post('/', createParticipant);
 
-module.exports = router; // Exporta o roteador
+
+router.delete('/:id', deleteParticipant);
+
+module.exports = router;

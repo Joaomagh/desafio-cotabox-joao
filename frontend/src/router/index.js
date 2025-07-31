@@ -3,16 +3,16 @@ import HomeView from '../views/HomeView.vue';
 
 const routes = [
     {
-    path: '/', // Define a rota raiz
-    name: 'home', // Nome da rota
-    component: HomeView, // Componente a ser renderizado para esta rota
+    path: '/', 
+    name: 'home', 
+    component: HomeView, 
     },
 ];
 
 const router = createRouter({
-    history: createWebHistory(), // Usa o modo de histórico para URLs limpas
-    routes, // As rotas definidas acima
+    history: createWebHistory(),
+    routes, 
 });
 
-export default router; // Exporta o roteador
+export default router; 
     
