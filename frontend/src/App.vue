@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-    <!-- O router-view renderiza o componente da rota atual (ex: HomeView.vue) -->
     <router-view /> 
   </div>
 </template>
@@ -12,11 +11,11 @@ export default {
 </script>
 
 <style>
-/* Estilos globais para o body ou para toda a aplicação */
 body {
-  font-family: Arial, sans-serif;
   margin: 0;
-  background-color: #f0f2f5;
-  /* Outros estilos globais aqui */
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif; 
+  background-color: #F5F5F5; 
 }
 </style>

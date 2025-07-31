@@ -1,4 +1,4 @@
-const Participant = require('../models/Participant'); // Importa o modelo Participant
+const Participant = require('../models/Participant');
 
 const getAllParticipants = async (req, res) => {
     try {

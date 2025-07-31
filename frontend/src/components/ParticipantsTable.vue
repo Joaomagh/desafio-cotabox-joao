@@ -1,46 +1,59 @@
 <template>
-  <div class="participant-table">
-    <h2>Dados dos Participantes</h2>
-    <table v-if="participants.length" class="participants-table">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Primeiro Nome</th>
-          <th>Sobrenome</th>
-          <th>Participação (%)</th>
-          <th>Ações</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(p, index) in participants" :key="p._id || index">
-          <td>{{ index + 1 }}</td>
-          <td>{{ p.firstName }}</td>
-          <td>{{ p.lastName }}</td>
-          <td>{{ p.participation }}%</td>
-          <td>
-            <button @click="confirmDelete(p._id)" class="delete-button">Excluir</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <p v-else class="empty">Nenhum participante ainda.</p>
-  </div>
+  <!-- eslint-disable vue/valid-v-slot --> 
+  <v-card class="pa-4" elevation="0">
+    <v-card-title class="text-h6 font-weight-bold mb-4 text-text">
+      Dados dos Participantes
+    </v-card-title>
+    <v-data-table
+      :headers="headers"
+      :items="participants"
+      item-key="_id"
+      class="elevation-0"
+      density="compact"
+      hide-default-footer
+      disable-pagination
+    >
+      <!-- Slot para customizar a célula de ID (para mostrar index + 1) -->
+      <template v-slot:item.id="{ index }">
+        {{ index + 1 }}
+      </template>
+
+      <!-- Slot para customizar a célula de Ações (botão Excluir) -->
+      <template v-slot:item.actions="{ item }">
+        <v-btn
+          color="error"
+          size="small"
+          @click="confirmDelete(item._id)"
+          class="font-weight-bold"
+        >
+          Excluir
+        </v-btn>
+      </template>
+
+      <template v-slot:no-data>
+        <p class="text-center text-grey-darken-1 py-4">Nenhum participante ainda.</p>
+      </template>
+    </v-data-table>
+  </v-card>
 </template>
 
 <script>
 export default {
-  name: 'ParticipantTable',
+  name: 'ParticipantsTable',
   props: {
     participants: {
       type: Array,
       required: true,
       default: () => [],
     },
+    headers: {
+      type: Array,
+      required: true,
+    },
   },
   methods: {
     confirmDelete(id) {
-      // ADICIONADO PARA DEPURAR: Verifica se o método está sendo chamado
-      console.log('Botão Excluir clicado para ID:', id); 
+      console.log('Botão Excluir clicado para ID:', id);
       this.$emit('delete-participant', id);
     },
   },
@@ -48,39 +61,4 @@ export default {
 </script>
 
 <style scoped>
-.participant-table {
-  margin-top: 20px;
-}
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 10px;
-}
-th, td {
-  border: 1px solid #ddd;
-  padding: 8px;
-  text-align: left;
-}
-th {
-  background-color: #f2f2f2;
-}
-tr:nth-child(even) {
-  background-color: #f9f9f9;
-}
-.delete-button {
-  background-color: #dc3545;
-  color: white;
-  padding: 5px 10px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 0.9em;
-}
-.delete-button:hover {
-  background-color: #c82333;
-}
-.empty {
-  margin-top: 2rem;
-  font-style: italic;
-}
 </style>

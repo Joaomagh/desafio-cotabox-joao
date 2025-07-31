@@ -15,6 +15,7 @@ module.exports = {
   rules: {
     'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+    'vue/valid-v-slot': 'off',
     'vue/multi-word-component-names': 'off', // Permite nomes de componentes de uma palavra (ex: App.vue)
     'no-unused-vars': 'off', // <-- ADICIONADO: Desativa o erro para variáveis não utilizadas
   },
