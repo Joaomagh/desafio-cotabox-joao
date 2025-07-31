@@ -1,119 +1,136 @@
 <template>
-  <v-app>
-    <v-main class="bg-background">
-      <!-- Header Section -->
-      <v-app-bar color="primary" flat>
-        <!-- Revertido para v-toolbar-title para exibir o texto "Cotabox Challenge" -->
-        <v-toolbar-title class="text-h6 font-weight-bold text-white">Cotabox Challenge</v-toolbar-title>
-      </v-app-bar>
+  <!-- REMOVIDO: <v-app> e <v-main> daqui, pois devem estar no App.vue -->
+  <div> <!-- Adicionado um div simples como wrapper raiz, se necessário -->
+    <!-- Header Section -->
+    <v-app-bar color="primary" flat>
+      <!-- Revertido para v-toolbar-title para exibir o texto "Cotabox Challenge" -->
+      <v-toolbar-title class="text-h6 font-weight-bold text-white">Cotabox Challenge</v-toolbar-title>
+    </v-app-bar>
 
-      <!-- Formulário de Entrada de Participantes -->
-      <v-container class="py-6 px-4">
-        <v-card class="pa-4" elevation="2">
-          <v-form @submit.prevent="handleSubmit">
-            <v-row dense align="center">
-              <v-col cols="12" sm="6" md="3">
-                <v-text-field
-                  v-model="firstName"
-                  label="First Name"
-                  outlined
-                  dense
-                  hide-details="auto"
-                  color="primary"
-                  :rules="[rules.required]"
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12" sm="6" md="3">
-                <v-text-field
-                  v-model="lastName"
-                  label="Last Name"
-                  outlined
-                  dense
-                  hide-details="auto"
-                  color="primary"
-                  :rules="[rules.required]"
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12" sm="6" md="3">
-                <v-text-field
-                  v-model.number="participation"
-                  label="Participation (%)"
-                  type="number"
-                  outlined
-                  dense
-                  hide-details="auto"
-                  color="primary"
-                  min="0"
-                  max="100"
-                  :rules="[rules.required, rules.number, rules.percentage]"
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12" sm="6" md="3">
-                <v-btn
-                  type="submit"
-                  color="primary"
-                  block
-                  class="font-weight-bold py-5"
-                >
-                  SEND
-                </v-btn>
-              </v-col>
-            </v-row>
-          </v-form>
-        </v-card>
-      </v-container>
+    <!-- Formulário de Entrada de Participantes -->
+    <v-container class="py-6 px-4">
+      <v-card class="pa-4" elevation="2">
+        <v-form @submit.prevent="handleSubmit">
+          <v-row dense align="center">
+            <v-col cols="12" sm="6" md="3">
+              <v-text-field
+                v-model="firstName"
+                label="First Name"
+                outlined
+                dense
+                hide-details="auto"
+                color="primary"
+                :rules="[rules.required]"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="12" sm="6" md="3">
+              <v-text-field
+                v-model="lastName"
+                label="Last Name"
+                outlined
+                dense
+                hide-details="auto"
+                color="primary"
+                :rules="[rules.required]"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="12" sm="6" md="3">
+              <v-text-field
+                v-model.number="participation"
+                label="Participation (%)"
+                type="number"
+                outlined
+                dense
+                hide-details="auto"
+                color="primary"
+                min="0"
+                max="100"
+                :rules="[rules.required, rules.number, rules.percentage]"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="12" sm="6" md="3">
+              <v-btn
+                type="submit"
+                color="primary"
+                block
+                class="font-weight-bold py-5"
+              >
+                SEND
+              </v-btn>
+            </v-col>
+          </v-row>
+        </v-form>
+      </v-card>
+    </v-container>
 
-      <!-- Seção de Título DATA -->
-      <v-container class="mt-8 mb-8 text-center">
-        <h2 class="text-h4 font-weight-bold text-text">DATA</h2>
-        <p class="text-subtitle-1 text-grey-darken-1">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit
-        </p>
-      </v-container>
+    <!-- Seção de Título DATA -->
+    <v-container class="mt-8 mb-8 text-center">
+      <h2 class="text-h4 font-weight-bold text-text">DATA</h2>
+      <p class="text-subtitle-1 text-grey-darken-1">
+        Lorem ipsum dolor 
+      </p>
+    </v-container>
 
-      <!-- Seção de Tabela e Gráfico -->
-      <v-container class="pb-8 px-4">
-        <v-row dense>
-          <v-col cols="12" lg="6">
-            <ParticipantsTable
-              :participants="participants"
-              :headers="tableHeaders"
-              @delete-participant="handleDeleteParticipant"
-            />
-          </v-col>
+    <!-- Seção de Tabela e Gráfico -->
+    <v-container class="pb-8 px-4">
+      <v-row dense>
+        <v-col cols="12" lg="6">
+          <ParticipantsTable
+            :participants="participants"
+            :headers="tableHeaders"
+            @delete-participant="handleDeleteParticipant"
+          />
+        </v-col>
 
-          <v-col cols="12" lg="6">
-            <ParticipantsChart
-              :participants="participants"
-              :totalParticipation="totalParticipation"
-            />
+        <v-col cols="12" lg="6">
+          <ParticipantsChart
+            :participants="participants"
+            :totalParticipation="totalParticipation"
+          />
+        </v-col>
+      </v-row>
+    </v-container>
+
+    <!-- Snackbar para mensagens de sucesso/erro -->
+    <v-snackbar
+      v-model="showSnackbar"
+      :timeout="snackbarTimeout"
+      :color="snackbarColor"
+      bottom
+      right
+    >
+      {{ snackbarMessage }}
+      <template v-slot:actions>
+        <v-btn color="white" variant="text" @click="showSnackbar = false">Fechar</v-btn>
+      </template>
+    </v-snackbar>
+
+    <!-- Dialog de Confirmação -->
+    <ConfirmDialog
+      :modelValue="showConfirmDialog"
+      @update:modelValue="showConfirmDialog = $event"
+      :message="confirmMessage"
+      @confirmed="onConfirmDelete"
+    />
+
+    <!-- Footer Section with Cotabox Logo -->
+    <v-footer app class="bg-surface py-2">
+      <v-container fluid class="text-center py-0">
+        <v-row justify="center" align="center">
+          <v-col cols="12">
+            <v-img
+              :src="cotaboxLogo"
+              alt="Logotipo Cotabox"
+              contain
+              height="25"
+              max-width="120"
+              class="mx-auto"
+            ></v-img>
           </v-col>
         </v-row>
       </v-container>
-
-      <!-- Snackbar para mensagens de sucesso/erro -->
-      <v-snackbar
-        v-model="showSnackbar"
-        :timeout="snackbarTimeout"
-        :color="snackbarColor"
-        bottom
-        right
-      >
-        {{ snackbarMessage }}
-        <template v-slot:actions>
-          <v-btn color="white" variant="text" @click="showSnackbar = false">Fechar</v-btn>
-        </template>
-      </v-snackbar>
-
-      <!-- Dialog de Confirmação -->
-      <ConfirmDialog
-        :modelValue="showConfirmDialog"
-        @update:modelValue="showConfirmDialog = $event"
-        :message="confirmMessage"
-        @confirmed="onConfirmDelete"
-      />
-    </v-main>
-  </v-app>
+    </v-footer>
+  </div> <!-- Fechamento do div wrapper -->
 </template>
 
 <script>
@@ -122,16 +139,16 @@ import ParticipantsChart from '@/components/ParticipantsChart.vue';
 import ConfirmDialog from '@/components/ConfirmDialog.vue';
 import { participantDataService } from '@/services/participantDataService';
 
-// Removida a importação da imagem do assets, pois não é mais usada no template
-// import cotaboxLogo from '@/assets/Logotipo_cotabox_SemFundo.png';
+// IMPORTANTE: Importa a imagem do assets
+import cotaboxLogo from '@/assets/Logotipo_cotabox_SemFundo.png';
 
 export default {
   name: 'HomeView',
   components: { ParticipantsTable, ParticipantsChart, ConfirmDialog },
   data() {
     return {
-      // Removida a propriedade da imagem do data
-      // cotaboxLogo: cotaboxLogo,
+      // Adiciona a imagem ao data para ser acessível no template
+      cotaboxLogo: cotaboxLogo,
       firstName: '',
       lastName: '',
       participation: '',
