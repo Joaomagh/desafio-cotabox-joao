@@ -1,5 +1,5 @@
 <template>
-  <v-card class="pa-4" elevation="0">
+  <v-card class="pa-4" elevation="2"> <!-- Alterado de elevation="0" para elevation="2" -->
     <v-card-title class="text-h6 font-weight-bold mb-4 text-text">
       Distribuição de Participações
     </v-card-title>
@@ -94,7 +94,7 @@ export default {
             }
           }
         },
-        cutout: '70%', 
+        cutout: '50%', 
       }
     },
   },
