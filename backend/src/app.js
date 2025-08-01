@@ -1,26 +1,26 @@
 const express = require('express');
 const cors = require('cors');
-const participantRoutes = require('./routes/participantRoutes'); 
+        const participantRoutes = require('./routes/participantRoutes'); 
 
-const app = express();
+    const app = express();
 
-// Middlewares
-// Configuração do CORS - Permite requisições APENAS do seu front-end na Vercel
-app.use(cors({
-  origin: 'https://desafio-cotabox-joao.vercel.app' 
-}));
-app.use(express.json());
+    // Middlewares
+    app.use(express.json()); 
 
-// Rotas
-app.use('/api/participants', participantRoutes);
+    app.use(cors({
+      origin: '*' 
+    }));
 
-// Nova rota para o caminho /api
-app.get('/api', (req, res) => {
-    res.send('Bem-vindo à API de Participantes!');
-});
+    // Rotas
+    app.use('/api/participants', participantRoutes);
 
-app.get('/', (req, res) => {
-    res.send('API funcionando!');
-});
+    app.get('/api', (req, res) => {
+        res.send('Bem-vindo à API de Participantes!');
+    });
 
-module.exports = app;
+    app.get('/', (req, res) => {
+        res.send('API funcionando!');
+    });
+
+    module.exports = app;
+    
