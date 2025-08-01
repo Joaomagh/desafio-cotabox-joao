@@ -187,9 +187,10 @@ export default {
 
     async fetchParticipants() {
       try {
-        const data = await participantDataService.fetchAllParticipants();
-        this.participants = data.participants;
-        this.totalParticipation = data.totalParticipation;
+        // AQUI ESTÁ A MUDANÇA: getParticipants() retorna o array diretamente
+        const participantsArray = await participantDataService.fetchAllParticipants(); 
+        this.participants = participantsArray;
+        this.totalParticipation = participantsArray.reduce((sum, p) => sum + Number(p.participation), 0);
       } catch (error) {
         console.error('Error fetching participants:', error);
         this.showAppSnackbar('Error loading participants. Please check backend.', 'error');

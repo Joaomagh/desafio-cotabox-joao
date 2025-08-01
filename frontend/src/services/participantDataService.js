@@ -1,13 +1,12 @@
-// frontend/src/services/participantDataService.js
 import { getParticipants, createParticipant, deleteParticipant } from './api';
 
 // Este serviço encapsula a lógica de negócio e as chamadas à API para participantes.
 export const participantDataService = {
-  // Busca todos os participantes e a soma total
+  // Busca todos os participantes
   async fetchAllParticipants() {
     try {
-      const data = await getParticipants();
-      return { participants: data.participants, totalParticipation: data.totalParticipation };
+      const participants = await getParticipants(); // getParticipants() já retorna o array
+      return participants; // Retorna o array diretamente
     } catch (error) {
       console.error('Erro no serviço ao buscar participantes:', error);
       throw error; // Propaga o erro para o componente tratar
@@ -36,9 +35,12 @@ export const participantDataService = {
     }
   },
 
-  // Validação de participação (lógica de negócio que pode ser centralizada)
   validateParticipation(currentParticipants, newParticipation) {
-    const total = currentParticipants.reduce((sum, p) => sum + Number(p.participation), 0);
+    // Garante que currentParticipants é um array antes de tentar reduzir
+    const total = Array.isArray(currentParticipants) 
+                  ? currentParticipants.reduce((sum, p) => sum + Number(p.participation), 0)
+                  : 0; // Se não for array, assume 0
+
     const newTotal = total + newParticipation;
 
     if (newTotal > 100) {
