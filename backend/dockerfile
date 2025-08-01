@@ -1,0 +1,27 @@
+# Usa uma imagem base oficial do Node.js
+# Escolha uma versão LTS (Long Term Support) que seja compatível com seu projeto.
+FROM node:18-alpine
+
+# Define o diretório de trabalho dentro do container
+WORKDIR /app
+
+# Copia os arquivos package.json e package-lock.json (ou yarn.lock)
+# para instalar as dependências antes de copiar o restante do código.
+# Isso otimiza o cache do Docker, pois as dependências só serão reinstaladas
+# se esses arquivos mudarem.
+COPY package*.json ./
+
+# Instala as dependências do projeto
+# Usa npm ci para instalações limpas e consistentes.
+RUN npm ci
+
+# Copia o restante do código da aplicação para o diretório de trabalho
+COPY . .
+
+# Expõe a porta em que a aplicação Node.js vai rodar.
+# Certifique-se de que esta porta corresponde à porta definida no seu server.js (ex: 5000).
+EXPOSE 5000
+
+# Define o comando para iniciar a aplicação quando o container for executado.
+# Usa o script "start" definido no package.json.
+CMD ["npm", "start"]
