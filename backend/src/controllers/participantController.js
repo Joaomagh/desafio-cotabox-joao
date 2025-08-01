@@ -1,45 +1,60 @@
 // backend/src/controllers/participantController.js
-const Participant = require('../models/Participant'); // Assumindo que você tem um modelo Participant
+const Participant = require('../models/Participant');
 
-// Função para buscar todos os participantes
+/**
+ * Busca todos os participantes e calcula a soma total de participação.
+ * @param {Object} req - Objeto de requisição do Express.
+ * @param {Object} res - Objeto de resposta do Express.
+ */
 exports.getAllParticipants = async (req, res) => {
   try {
     const participants = await Participant.find();
     
-    // Calcula a soma total da participação
+    // Calcula a soma total da participação para o gráfico.
     const totalParticipation = participants.reduce((sum, p) => sum + Number(p.participation), 0);
 
-    // Retorna um objeto com os participantes e a soma total
-    return res.status(200).json({ 
-      participants: participants, 
-      totalParticipation: totalParticipation 
+    res.status(200).json({ 
+      participants, // Atalho para participants: participants
+      totalParticipation 
     });
   } catch (error) {
     console.error('Erro ao buscar participantes no controlador:', error);
-    return res.status(500).json({ message: 'Erro interno do servidor ao buscar participantes' });
+    res.status(500).json({ message: 'Erro interno do servidor ao buscar participantes' });
   }
 };
 
-// Função para criar um novo participante
+/**
+ * Cria um novo participante no banco de dados.
+ * @param {Object} req - Objeto de requisição do Express (contém firstName, lastName, participation no body).
+ * @param {Object} res - Objeto de resposta do Express.
+ */
 exports.createParticipant = async (req, res) => {
   try {
     const { firstName, lastName, participation } = req.body;
 
-    // Validação básica (pode ser mais robusta)
+    // Validação básica dos campos obrigatórios e tipo de participação.
     if (!firstName || !lastName || participation === undefined || isNaN(Number(participation))) {
       return res.status(400).json({ message: 'Todos os campos são obrigatórios e participação deve ser um número.' });
     }
 
-    const newParticipant = new Participant({ firstName, lastName, participation: Number(participation) });
+    const newParticipant = new Participant({ 
+      firstName, 
+      lastName, 
+      participation: Number(participation) // Garante que participation é um número
+    });
     await newParticipant.save();
-    return res.status(201).json(newParticipant);
+    res.status(201).json(newParticipant);
   } catch (error) {
     console.error('Erro ao criar participante no controlador:', error);
-    return res.status(500).json({ message: 'Erro interno do servidor ao criar participante' });
+    res.status(500).json({ message: 'Erro interno do servidor ao criar participante' });
   }
 };
 
-// Função para deletar um participante
+/**
+ * Deleta um participante pelo ID.
+ * @param {Object} req - Objeto de requisição do Express (contém id nos parâmetros).
+ * @param {Object} res - Objeto de resposta do Express.
+ */
 exports.deleteParticipant = async (req, res) => {
   try {
     const { id } = req.params;
@@ -48,9 +63,9 @@ exports.deleteParticipant = async (req, res) => {
     if (!participant) {
       return res.status(404).json({ message: 'Participante não encontrado.' });
     }
-    return res.status(200).json({ message: 'Participante excluído com sucesso.' });
+    res.status(200).json({ message: 'Participante excluído com sucesso.' });
   } catch (error) {
     console.error('Erro ao deletar participante no controlador:', error);
-    return res.status(500).json({ message: 'Erro interno do servidor ao deletar participante' });
+    res.status(500).json({ message: 'Erro interno do servidor ao deletar participante' });
   }
 };

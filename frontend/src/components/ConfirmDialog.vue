@@ -24,7 +24,6 @@
 export default {
   name: 'ConfirmDialog',
   props: {
-    // Controla a visibilidade do diálogo
     modelValue: {
       type: Boolean,
       required: true,
@@ -40,17 +39,15 @@ export default {
         return this.modelValue;
       },
       set(val) {
-        this.$emit('update:modelValue', val); // Emite evento para atualizar a prop modelValue no pai
+        this.$emit('update:modelValue', val);
       },
     },
   },
   methods: {
-    // Método chamado ao clicar em "Cancelar"
     cancel() {
       this.dialog = false; 
       this.$emit('confirmed', false); 
     },
-    // Método chamado ao clicar em "Confirmar"
     confirm() {
       this.dialog = false;
       this.$emit('confirmed', true); 
@@ -60,5 +57,4 @@ export default {
 </script>
 
 <style scoped>
-
 </style>

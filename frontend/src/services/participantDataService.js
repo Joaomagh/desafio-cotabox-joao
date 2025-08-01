@@ -1,45 +1,64 @@
 import { getParticipants, createParticipant, deleteParticipant } from './api';
-
-// Este serviço encapsula a lógica de negócio e as chamadas à API para participantes.
 export const participantDataService = {
-  // Busca todos os participantes
+  /**
+   * Busca todos os participantes e a soma total de participação do backend.
+   * Espera um objeto com 'participants' (array) e 'totalParticipation' (número).
+   * @returns {Object} Um objeto contendo o array de participantes e a participação total.
+   */
   async fetchAllParticipants() {
     try {
-      const participants = await getParticipants(); // getParticipants() já retorna o array
-      return participants; // Retorna o array diretamente
+      const responseData = await getParticipants(); 
+      
+      return { 
+        participants: responseData.participants || [], // Garante que seja um array, mesmo que vazio
+        totalParticipation: Number(responseData.totalParticipation) || 0 // Garante que seja um número
+      };
     } catch (error) {
       console.error('Erro no serviço ao buscar participantes:', error);
       throw error; // Propaga o erro para o componente tratar
     }
   },
 
-  // Adiciona um novo participante
+  /**
+   * Adiciona um novo participante através da API.
+   * @param {Object} participantData - Dados do participante a ser adicionado.
+   * @returns {Object} A resposta do backend.
+   */
   async addNewParticipant(participantData) {
     try {
       const response = await createParticipant(participantData);
-      return response; // Retorna a resposta do backend (sucesso ou erro de validação)
+      return response; 
     } catch (error) {
       console.error('Erro no serviço ao adicionar participante:', error);
-      throw error; // Propaga o erro para o componente tratar
+      throw error; 
     }
   },
 
-  // Exclui um participante
+  /**
+   * Exclui um participante através da API.
+   * @param {string} id - O ID do participante a ser excluído.
+   * @returns {Object} A resposta do backend.
+   */
   async removeParticipant(id) {
     try {
       const response = await deleteParticipant(id);
-      return response; // Retorna a resposta do backend
+      return response; 
     } catch (error) {
       console.error('Erro no serviço ao excluir participante:', error);
-      throw error; // Propaga o erro para o componente tratar
+      throw error; 
     }
   },
 
+  /**
+   * Valida se a adição de uma nova participação não excede 100%.
+   * @param {Array} currentParticipants - Array de participantes atuais.
+   * @param {number} newParticipation - Nova participação a ser adicionada.
+   * @returns {Object} Objeto com 'isValid' (boolean) e 'errorMessage' (string, se inválido).
+   */
   validateParticipation(currentParticipants, newParticipation) {
-    // Garante que currentParticipants é um array antes de tentar reduzir
     const total = Array.isArray(currentParticipants) 
                   ? currentParticipants.reduce((sum, p) => sum + Number(p.participation), 0)
-                  : 0; // Se não for array, assume 0
+                  : 0; 
 
     const newTotal = total + newParticipation;
 

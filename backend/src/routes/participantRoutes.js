@@ -6,11 +6,8 @@ const router = express.Router();
 
 router.get('/', getAllParticipants);
 
-
 router.post('/', createParticipant);
 
-
 router.delete('/:id', deleteParticipant);
-
 
 module.exports = router;

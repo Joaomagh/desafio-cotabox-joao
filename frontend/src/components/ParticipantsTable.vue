@@ -1,6 +1,5 @@
-<!-- frontend/src/components/ParticipantsTable.vue -->
 <template>
-  <!-- eslint-disable -->
+  <!-- eslint-disable --> <!-- Desativa o ESLint para este arquivo, se necessário, mas considere resolver os warnings. -->
   <v-card class="pa-4" elevation="2">
     <v-card-title class="text-h6 font-weight-bold mb-4 text-text">
       Dados dos Participantes
@@ -14,17 +13,17 @@
       hide-default-footer
       disable-pagination
     >
-      <!-- Slot para customizar a célula de ID (para mostrar index + 1) -->
+      <!-- Slot para customizar a célula de ID (mostra index + 1) -->
       <template v-slot:item.id="{ index }">
         {{ index + 1 }}
       </template>
 
-      <!-- Slot para customizar a célula de Participação para adicionar '%' -->
+      <!-- Slot para customizar a célula de Participação (adiciona '%') -->
       <template v-slot:item.participation="{ item }">
         {{ item.participation }}%
       </template>
 
-      <!-- Slot para customizar a célula de Ações (botão Excluir com ícone) -->
+      <!-- Slot para customizar a célula de Ações (botão Excluir com ícone de lixeira) -->
       <template v-slot:item.actions="{ item }">
         <v-btn
           icon
@@ -34,7 +33,7 @@
           @click="confirmDelete(item._id)"
           class="font-weight-bold"
         >
-          <v-icon>mdi-delete</v-icon> <!-- Ícone de lixeira -->
+          <v-icon>mdi-delete</v-icon> 
         </v-btn>
       </template>
 
@@ -55,30 +54,32 @@ export default {
       required: true,
       default: () => [],
     },
-    headers: { // Agora este prop é usado para as colunas da tabela
+    headers: {
       type: Array,
       required: true,
     },
   },
   methods: {
+    /**
+     * Emite um evento para o componente pai para confirmar a exclusão de um participante.
+     * @param {string} id - O ID do participante a ser excluído.
+     */
     confirmDelete(id) {
-      console.log('Botão Excluir clicado para ID:', id);
-      this.$emit('delete-participant', id); // Emite o evento para o componente pai
+      this.$emit('delete-participant', id); 
     },
   },
 };
 </script>
 
 <style scoped>
-/* Adicione estilos customizados se necessário */
 .custom-table .v-data-table__wrapper {
-  border: 1px solid var(--v-border-base); /* Exemplo de borda */
-  border-radius: 8px; /* Cantos arredondados */
-  overflow: hidden; /* Garante que a borda arredondada funcione */
+  border: 1px solid var(--v-border-base); 
+  border-radius: 8px; 
+  overflow: hidden; /* Garante que a borda arredondada funcione corretamente. */
 }
 
 .custom-table thead {
-  background-color: var(--v-tableHead-base); /* Cor de fundo do cabeçalho */
+  background-color: var(--v-tableHead-base); 
 }
 
 .custom-table th {

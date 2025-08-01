@@ -1,6 +1,6 @@
 <template>
   <div>
-    <!-- Header Section -->
+    <!-- Cabeçalho da Aplicação -->
     <v-app-bar color="primary" flat>
       <v-toolbar-title class="text-h6 font-weight-bold text-white">Cotabox Challenge</v-toolbar-title>
     </v-app-bar>
@@ -18,7 +18,7 @@
                 dense
                 hide-details="auto"
                 color="primary"
-                :rules="[rules.required]"
+                :rules="[rules.required, rules.noNumbers]"
               ></v-text-field>
             </v-col>
             <v-col cols="12" sm="6" md="3">
@@ -29,7 +29,7 @@
                 dense
                 hide-details="auto"
                 color="primary"
-                :rules="[rules.required]"
+                :rules="[rules.required, rules.noNumbers]"
               ></v-text-field>
             </v-col>
             <v-col cols="12" sm="6" md="3">
@@ -61,7 +61,7 @@
       </v-card>
     </v-container>
 
-    <!-- Seção de Título DATA -->
+    <!-- Seção de Título Principal -->
     <v-container class="mt-8 mb-8 text-center">
       <h2 class="text-h4 font-weight-bold text-text">DATA</h2>
       <p class="text-subtitle-1 text-grey-darken-1">
@@ -103,7 +103,7 @@
       </template>
     </v-snackbar>
 
-    <!-- Dialog de Confirmação -->
+    <!-- Diálogo de Confirmação -->
     <ConfirmDialog
       :modelValue="showConfirmDialog"
       @update:modelValue="showConfirmDialog = $event"
@@ -111,7 +111,7 @@
       @confirmed="onConfirmDelete"
     />
 
-    <!-- Footer Section with Cotabox Logo -->
+    <!-- Seção do Rodapé com Logotipo -->
     <v-footer app class="bg-surface py-2">
       <v-container fluid class="text-center py-0">
         <v-row justify="center" align="center">
@@ -170,6 +170,7 @@ export default {
       ],
       rules: {
         required: value => !!value || 'Campo obrigatório.',
+        noNumbers: value => !/\d/.test(value) || 'Não pode conter números.',
         number: value => !isNaN(parseFloat(value)) && isFinite(value) || 'Deve ser um número.',
         percentage: value => (value >= 0 && value <= 100) || 'Participação deve ser entre 0 e 100.',
       },
@@ -187,10 +188,11 @@ export default {
 
     async fetchParticipants() {
       try {
-        // AQUI ESTÁ A MUDANÇA: getParticipants() retorna o array diretamente
-        const participantsArray = await participantDataService.fetchAllParticipants(); 
-        this.participants = participantsArray;
-        this.totalParticipation = participantsArray.reduce((sum, p) => sum + Number(p.participation), 0);
+        const { participants, totalParticipation } = await participantDataService.fetchAllParticipants(); 
+        
+        this.participants = Array.isArray(participants) ? participants : [];
+        this.totalParticipation = Number(totalParticipation) || 0;
+
       } catch (error) {
         console.error('Error fetching participants:', error);
         this.showAppSnackbar('Error loading participants. Please check backend.', 'error');
@@ -198,7 +200,7 @@ export default {
     },
 
     async handleSubmit() {
-      // Validação dos campos obrigatórios individualmente
+      // Validação dos campos obrigatórios
       if (!this.firstName) {
         this.showAppSnackbar('Por favor, preencha o campo "First Name".', 'warning');
         return;
@@ -212,6 +214,16 @@ export default {
         return;
       }
 
+      // Validação de números nos nomes
+      if (this.rules.noNumbers(this.firstName) !== true) {
+        this.showAppSnackbar('O campo "First Name" não pode conter números.', 'warning');
+        return;
+      }
+      if (this.rules.noNumbers(this.lastName) !== true) {
+        this.showAppSnackbar('O campo "Last Name" não pode conter números.', 'warning');
+        return;
+      }
+
       const newParticipation = Number(this.participation);
 
       // Validação da porcentagem
@@ -220,7 +232,7 @@ export default {
         return;
       }
 
-      const validation = participantDataService.validateParticipation(this.participants, newParticipation);
+      const validation = participantDataService.validateParticipation(Array.isArray(this.participants) ? this.participants : [], newParticipation);
       if (!validation.isValid) {
         this.showAppSnackbar(validation.errorMessage, 'warning');
         return;
