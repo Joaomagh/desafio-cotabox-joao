@@ -1,9 +1,7 @@
 <template>
-  <!-- REMOVIDO: <v-app> e <v-main> daqui, pois devem estar no App.vue -->
-  <div> <!-- Adicionado um div simples como wrapper raiz, se necessário -->
+  <div>
     <!-- Header Section -->
     <v-app-bar color="primary" flat>
-      <!-- Revertido para v-toolbar-title para exibir o texto "Cotabox Challenge" -->
       <v-toolbar-title class="text-h6 font-weight-bold text-white">Cotabox Challenge</v-toolbar-title>
     </v-app-bar>
 
@@ -67,7 +65,7 @@
     <v-container class="mt-8 mb-8 text-center">
       <h2 class="text-h4 font-weight-bold text-text">DATA</h2>
       <p class="text-subtitle-1 text-grey-darken-1">
-        Lorem ipsum dolor 
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit
       </p>
     </v-container>
 
@@ -130,7 +128,7 @@
         </v-row>
       </v-container>
     </v-footer>
-  </div> <!-- Fechamento do div wrapper -->
+  </div>
 </template>
 
 <script>
@@ -139,7 +137,6 @@ import ParticipantsChart from '@/components/ParticipantsChart.vue';
 import ConfirmDialog from '@/components/ConfirmDialog.vue';
 import { participantDataService } from '@/services/participantDataService';
 
-// IMPORTANTE: Importa a imagem do assets
 import cotaboxLogo from '@/assets/Logotipo_cotabox_SemFundo.png';
 
 export default {
@@ -147,13 +144,11 @@ export default {
   components: { ParticipantsTable, ParticipantsChart, ConfirmDialog },
   data() {
     return {
-      // Adiciona a imagem ao data para ser acessível no template
       cotaboxLogo: cotaboxLogo,
       firstName: '',
       lastName: '',
       participation: '',
 
-      // Snackbar state
       showSnackbar: false,
       snackbarMessage: '',
       snackbarColor: '',
@@ -166,7 +161,6 @@ export default {
       confirmMessage: '',
       participantToDeleteId: null,
 
-      // Table Headers - Reverted to default for better responsiveness
       tableHeaders: [
         { title: 'ID', key: 'id', align: 'start', sortable: false },
         { title: 'First Name', key: 'firstName', align: 'start', sortable: false },
@@ -203,17 +197,25 @@ export default {
     },
 
     async handleSubmit() {
+      // Validação dos campos obrigatórios individualmente
+      if (!this.firstName) {
+        this.showAppSnackbar('Por favor, preencha o campo "First Name".', 'warning');
+        return;
+      }
+      if (!this.lastName) {
+        this.showAppSnackbar('Por favor, preencha o campo "Last Name".', 'warning');
+        return;
+      }
+      if (this.participation === '' || isNaN(Number(this.participation))) {
+        this.showAppSnackbar('Por favor, preencha o campo "Participation" com um número válido.', 'warning');
+        return;
+      }
+
       const newParticipation = Number(this.participation);
 
-      // Validação usando as regras
-      const isFormValid = this.rules.required(this.firstName) === true &&
-                          this.rules.required(this.lastName) === true &&
-                          this.rules.required(this.participation) === true &&
-                          this.rules.number(this.participation) === true &&
-                          this.rules.percentage(this.participation) === true;
-
-      if (!isFormValid) {
-        this.showAppSnackbar('Por favor, preencha todos os campos corretamente. A participação deve ser entre 0 e 100.', 'warning');
+      // Validação da porcentagem
+      if (newParticipation < 0 || newParticipation > 100) {
+        this.showAppSnackbar('A participação deve ser entre 0 e 100%.', 'warning');
         return;
       }
 
