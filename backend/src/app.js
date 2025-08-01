@@ -7,7 +7,7 @@ const app = express();
 // Middlewares
 // Configuração do CORS - Permite requisições APENAS do seu front-end na Vercel
 app.use(cors({
-  origin: 'desafio-cotabox-joao.vercel.app' 
+  origin: 'https://desafio-cotabox-joao.vercel.app' 
 }));
 app.use(express.json());
 
