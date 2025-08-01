@@ -5,7 +5,9 @@ const participantRoutes = require('./routes/participantRoutes');
 const app = express();
 
 // Middlewares
-app.use(cors());
+app.use(cors({
+  origin: 'https://cotabox-challenge-frontend.vercel.app/' 
+}));
 app.use(express.json());
 
 // Rotas
